@@ -1,8 +1,6 @@
 package com.liqinchun.knowledge.knowledgealgorithm.leecode;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Solution {
 
@@ -24,9 +22,78 @@ public class Solution {
         return new int[0];
     }
     /**
-     * 题2
+     * 题2 两数相加
+     * 给你两个非空的链表，表示两个非负的整数。他们每位数字都是按照逆序的方式存储的，
+     * 并且每个节点只能存储一位数字。
+     * 请你将两个数相加，并以相同形式返回一个表示和的链表。
+     * 你可以假设除数字0以外，其他数字都不会以0开头
      *
      */
+    public static ListNode addTwoNumber(ListNode l1,ListNode l2){
+        int carry = 0;
+        ListNode head = null;
+        ListNode tail = null;
+        while (l1!=null || l2!=null|| carry!=0){
+            int n1 = l1!=null?l1.number:0;
+            int n2 = l2!=null?l2.number:0;
+            int sum = n1+n2+carry;
+            if (head == null) {
+                head = tail = new ListNode(null,null,sum%10);
+            } else {
+                tail.nextNode = new ListNode(null,null,sum%10);
+                tail = tail.nextNode;
+            }
+            carry = sum/10;
+            if (l1!=null) {
+                l1 = l1.nextNode;
+            }
+            if (l2!=null) {
+                l2 = l2.nextNode;
+            }
+        }
+        return head;
+    }
+    private static class ListNode{
+        ListNode preNode;
+        Integer number;
+        ListNode nextNode;
+        public ListNode(ListNode preNode,ListNode nextNode,Integer number){
+            this.preNode = preNode;
+            this.nextNode = nextNode;
+            this.number = number;
+        }
+
+    }
+
+    /**
+     * 题3
+     * 给定一个字符串，请你找出不含重复字母的最长字符串的长度
+     * 滑动窗口
+     * 1.找到字串
+     * 2.记录长度
+     * 3.更新长度
+     */
+
+    public static int repetitiveStr(String str) {
+        Hashtable<Character, Integer> hashtable = new Hashtable();
+        int start=0;
+        int mark = 0;
+        int maxLength = 0;
+        for (char c:str.toCharArray()) {
+            mark ++;
+
+            if (hashtable.containsKey(c)) {
+                start = Math.max(hashtable.get(c), start);
+//                start = hashtable.get(c);
+            }
+            hashtable.put(c,mark);
+            maxLength = Math.max(maxLength,mark - start);
+
+        }
+        return maxLength;
+
+
+    }
 
     /**
      * 验证回文字符串
@@ -89,5 +156,27 @@ public class Solution {
         for (int a:arrSum) {
             System.out.println(a);
         }
+
+        //题2
+        ListNode listNode10 = new ListNode(null,null,2);
+        ListNode listNode11 = new ListNode(null,null,4);
+        ListNode listNode12 = new ListNode(null,null,5);
+        ListNode listNode20 = new ListNode(null,null,5);
+        ListNode listNode21 = new ListNode(null,null,6);
+        ListNode listNode22 = new ListNode(null,null,4);
+        listNode10.nextNode = listNode11;
+        listNode11.nextNode = listNode12;
+        listNode20.nextNode = listNode21;
+        listNode21.nextNode = listNode22;
+        ListNode node = addTwoNumber(listNode10,listNode20);
+        System.out.println(".............题2");
+        while (node != null) {
+            System.out.println(node.number);
+            node = node.nextNode;
+        }
+        System.out.println("..........题3");
+        System.out.println(repetitiveStr("abba"));
+
+
     }
 }
